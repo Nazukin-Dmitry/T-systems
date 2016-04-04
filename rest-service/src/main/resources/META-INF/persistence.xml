@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" version="2.1">
+    <persistence-unit name="DataSource" transaction-type="JTA">
+        <jta-data-source>java:/jdbc/MySqlDS</jta-data-source>
+
+        <class>com.tsystems.nazukin.logiweb.rs.model.entity.DriverEntity</class>
+        <class>com.tsystems.nazukin.logiweb.rs.model.entity.EmployeeEntity</class>
+        <class>com.tsystems.nazukin.logiweb.rs.model.entity.CityEntity</class>
+        <class>com.tsystems.nazukin.logiweb.rs.model.entity.MapEntity</class>
+        <class>com.tsystems.nazukin.logiweb.rs.model.entity.TruckEntity</class>
+        <class>com.tsystems.nazukin.logiweb.rs.model.entity.OrderEntity</class>
+        <class>com.tsystems.nazukin.logiweb.rs.model.entity.OrderItemEntity</class>
+        <class>com.tsystems.nazukin.logiweb.rs.model.entity.CargoEntity</class>
+
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+            <property name="hbm2ddl.auto" value="validate"/>
+        </properties>
+    </persistence-unit>
+</persistence>

@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+    <title>Logiweb</title>
+    <link rel="stylesheet" href="resources/bootstrap/css/bootstrap.min.css"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+    <!-- Theme style -->
+    <link rel="stylesheet" href="resources/dist/css/AdminLTE.min.css"/>
+
+    <link rel="stylesheet" href="resources/dist/css/skins/skin-blue.min.css"/>
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</h:head>
+<h:body styleClass="hold-transition skin-blue sidebar-mini">
+    <div class="wrapper">
+
+        <!-- Main Header -->
+        <header class="main-header">
+
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>LW</b></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>LogiWeb</b></span>
+            </a>
+
+            <!-- Header Navbar -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <!--           <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                            <span class="sr-only">Toggle navigation</span>
+                          </a> -->
+                <!-- Navbar Right Menu -->
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li><h:form styleClass="margin">
+                            <h:commandButton styleClass="btn btn-primary btn-sm" action="#{driverBean.logout}"
+                                              value="Sign out"/>
+                            </h:form>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Welcome
+                </h1>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Your information</h3>
+                            </div><!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <dl class="dl-horizontal">
+                                            <dt>Your serial number</dt>
+                                            <dd>#{driverBean.driverInfo.serialNumber}</dd>
+                                            <dt>Your status</dt>
+                                            <dd>#{driverBean.driverInfo.status}</dd>
+                                            <dt>Order's number</dt>
+                                            <dd>#{driverBean.orderInfo.id}</dd>
+                                            <dt>Order's start time</dt>
+                                            <dd>#{driverBean.orderInfo.startTime}</dd>
+                                            <dt>Order's duration</dt>
+                                            <dd>#{driverBean.orderInfo.duration}</dd>
+                                            <dt>Order's truck</dt>
+                                            <dd>#{driverBean.orderInfo.truck.regNumber}</dd>
+                                            <dt>Drivers in order</dt>
+                                            <dd>
+                                                <ul>
+                                                    <c:forEach var="driver" items="#{driverBean.orderInfo.drivers}">
+                                                        <li>number: #{driver.serialNumber}<br/>
+                                                            name: #{driver.employee.firstName} #{driver.employee.secondName}<br/>
+                                                            status: #{driver.status}
+                                                        </li>
+                                                    </c:forEach>
+                                                </ul>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <dl class="dl-horizontal">
+                                            <dt>The list of waypoints</dt>
+                                            <dd>
+                                                <h:dataTable value="#{driverBean.orderInfo.orderItems}" var="item"
+                                                             styleClass="table table-striped">
+                                                    <h:column>
+                                                        <!-- column header -->
+                                                        <f:facet name="header">Item No</f:facet>
+                                                        <!-- row record -->
+                                                        #{item.sequenceNumber+1}
+                                                    </h:column>
+
+                                                    <h:column>
+                                                        <f:facet name="header">City Name</f:facet>
+                                                        #{item.city.name}
+                                                    </h:column>
+
+                                                    <h:column>
+                                                        <f:facet name="header">Cargo</f:facet>
+                                                        #{item.cargo}
+                                                    </h:column>
+
+                                                    <h:column>
+                                                        <f:facet name="header">Type</f:facet>
+                                                        #{item.type}
+                                                    </h:column>
+
+                                                </h:dataTable>
+                                            </dd>
+                                        </dl>
+                                        </div>
+                                    </div>
+                            </div><!-- /.box-body -->
+                            <div class="box-footer">
+                                <h:form>
+                                    <h:commandButton styleClass="btn btn-primary margin" action="#{driverBean.getInformation}" value="Update information"/>
+                                    <c:if test="#{driverBean.driverInfo.status ne 'FREE'}">
+                                    <h:commandButton styleClass="btn btn-primary margin" action="#{driverBean.changeDriverStatus}"
+                                                     value="Change driver status"/>
+                                    </c:if>
+                                    <c:if test="#{driverBean.allDelivered}">
+                                        <h:commandButton styleClass="btn btn-primary margin" action="#{driverBean.finishOrder}"
+                                                         value="Finish order"/>
+                                    </c:if>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <c:if test="#{driverBean.driverInfo.status eq 'FREE'}">
+                <div class="row">
+                    <div class="col-md-12">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Start Order</h3>
+                                </div><!-- /.box-header -->
+                                <h:form>
+                                    <div class="box-body">
+                                        <label>Choose type:  </label>
+                                        <h:selectOneMenu value="#{driverBean.driverInfo.status}">
+                                            <f:selectItem itemValue="DRIVE" itemLabel="First driver" />
+                                            <f:selectItem itemValue="ORDER" itemLabel="Second driver(rest)" />
+                                        </h:selectOneMenu>
+                                    </div><!-- /.box-body -->
+                                    <div class="box-footer">
+                                        <h:commandButton styleClass="btn btn-primary" action="#{driverBean.startOrder}" value="Submit"/>
+                                    </div>
+                                </h:form>
+                            </div>
+                    </div>
+                </div>
+            </c:if>
+
+            <c:if test="#{driverBean.driverInfo.status ne 'FREE'}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Change cargo status</h3>
+                            </div><!-- /.box-header -->
+                            <h:form>
+                                <div class="box-body">
+                                    <label>Choose cargo : </label><br/>
+                                    <h:selectOneMenu value="#{driverBean.cargoId}">
+                                        <f:selectItems value="#{driverBean.cargos}" var="cargo"
+                                                       itemValue="#{cargo.id}" itemLabel="#{cargo}" />
+                                    </h:selectOneMenu><br/>
+                                    <label>Choose type : </label><br/>
+                                    <h:selectOneMenu value="#{driverBean.cargoStatus}">
+                                        <f:selectItem itemValue="PREPARED" itemLabel="PREPARED" />
+                                        <f:selectItem itemValue="SHIPPED" itemLabel="SHIPPED" />
+                                        <f:selectItem itemValue="DELIVERED" itemLabel="DELIVERED" />
+                                    </h:selectOneMenu><br/>
+                                </div>
+                                <div class="box-footer">
+                                <h:commandButton styleClass="btn btn-primary" action="#{driverBean.changeCargoStatus}"
+                                             value="Change cargo status"/>
+                                </div>
+                            </h:form>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </c:if>
+
+
+            </section><!-- /.content -->
+        </div><!-- /.content-wrapper -->
+
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="pull-right hidden-xs">
+            </div>
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2016.</strong> All rights reserved.
+        </footer>
+    </div><!-- ./wrapper -->
+
+    <!-- REQUIRED JS SCRIPTS -->
+    <!--<h:outputScript library="resources/bootstrap/js" name="bootstrap.min.js"/>-->
+
+    <!-- jQuery 2.1.4 -->
+    <script type="application/javascript" src="resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <!-- Bootstrap 3.3.5 -->
+    <script type="application/javascript" src="resources/bootstrap/js/bootstrap.min.js"></script>
+    <!-- AdminLTE App -->
+    <script type="application/javascript" src="resources/dist/js/app.min.js"></script>
+
+    <!-- Optionally, you can add Slimscroll and FastClick plugins.
+         Both of these plugins are recommended to enhance the
+         user experience. Slimscroll is required when using the
+         fixed layout. -->
+
+</h:body>
+</html>
