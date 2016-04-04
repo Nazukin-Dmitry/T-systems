@@ -81,7 +81,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <table id="example1" class="table table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Id</th>
+                                    <%--<th>Id</th>--%>
                                     <th>Name</th>
                                     <th></th>
                                 </tr>
@@ -89,7 +89,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 <tbody>
                                     <c:forEach var="city" items="${cityList}">
                                         <tr>
-                                            <td>${city.id}</td>
+                                            <%--<td>${city.id}</td>--%>
                                             <td>${city.name}</td>
                                             <td><a href="${pageContext.request.contextPath}/manager/map/edit?id=${city.id}">more</a></td>
                                         </tr>

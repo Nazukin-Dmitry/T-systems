@@ -59,8 +59,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <form role="form" action="${pageContext.request.contextPath}/manager/map/edit" method="post">
                             <div class="box-body">
                                 <div class="form-group">
-                                    <label>Id</label>
-                                    <input type="text" class="form-control" value="${id}" name="id" readonly>
+                                    <%--<label>Id</label>--%>
+                                    <input type="hidden" class="form-control" value="${id}" name="id">
                                 </div>
                                 <div class="form-group">
                                     <label for="inputName">City name</label>

@@ -9,9 +9,8 @@ import com.tsystems.nazukin.logiweb.rs.model.enums.DriverStatus;
 import com.tsystems.nazukin.logiweb.rs.model.enums.OrderStatus;
 
 import javax.ejb.*;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by 1 on 23.03.2016.
@@ -117,7 +116,7 @@ public class DriverService implements DriverServiceApi {
             driver.setStatus(DriverStatus.FREE);
             driver.setCurrentCity(lastCity);
             driver.setCurrentOrder(null);
-            driver.setWorkTime(driver.getWorkTime() + duration);
+            driver.setWorkTime(countWorkTime(driver.getWorkTime(), orderEntity));
         }
         truck.setCurrentCity(lastCity);
         orderEntity.setStatus(OrderStatus.DONE);
@@ -155,5 +154,36 @@ public class DriverService implements DriverServiceApi {
             return false;
         }
         return true;
+    }
+
+    private Integer countWorkTime(Integer workTime, OrderEntity order) {
+        Date startTime = order.getStartTime();
+        Integer duration = order.getDuration();
+
+        Calendar calendarStart = Calendar.getInstance();
+        calendarStart.setTime(startTime);
+        Calendar calendarEnd = Calendar.getInstance();
+        calendarEnd.setTimeInMillis(startTime.getTime() + TimeUnit.HOURS.toMillis(duration));
+
+        //if startTime of order is not in next month
+        if (Calendar.getInstance().get(Calendar.MONTH) == calendarStart.get(Calendar.MONTH)) {
+            //if end of order in the next month
+            long diffHours = duration;
+            if (calendarStart.get(Calendar.MONTH) != calendarEnd.get(Calendar.MONTH)) {
+                //set time to start of neext month
+                calendarStart.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMinimum(Calendar.DAY_OF_MONTH));
+                calendarStart.set(Calendar.HOUR_OF_DAY, calendarEnd.getActualMinimum(Calendar.HOUR_OF_DAY));
+                calendarStart.set(Calendar.MINUTE, calendarEnd.getActualMinimum(Calendar.MINUTE));
+                calendarStart.set(Calendar.SECOND, calendarEnd.getActualMinimum(Calendar.SECOND));
+
+                long diff = calendarEnd.getTimeInMillis() - calendarStart.getTimeInMillis();
+                diffHours = TimeUnit.MILLISECONDS.toHours(diff);
+                return (int) diffHours;
+            } else {
+                return ((int) diffHours + workTime);
+            }
+        } else {
+            return duration + workTime;
+        }
     }
 }

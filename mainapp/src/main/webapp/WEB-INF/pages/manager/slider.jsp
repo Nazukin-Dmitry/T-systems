@@ -33,13 +33,15 @@
                             <c:if test="${orderItem.cargo != null && orderItem.type == 'LOADING'}">
                             Cargo:<ul>
                                     <li>name: <input style="color: #222d32;" type="text" name="name" value="${orderItem.cargo.name}" required></li>
-                                    <li>weight(kg): <input style="color: #222d32;" type="number" min="1" max="${sessionScope.maxWeight + orderItem.cargo.weight}" name="weight" value="${orderItem.cargo.weight}" required></li>
+                                    <li>weight(max = ${sessionScope.maxWeight}): <input style="color: #222d32;" type="number" min="1"
+                                                                                        max="${sessionScope.cargoList.contains(orderItem.cargo) ? sessionScope.maxWeight + orderItem.cargo.weight : sessionScope.maxWeight}"
+                                                                                        name="weight" value="${orderItem.cargo.weight}" required></li>
                                     </ul>
                             </c:if>
                             <c:if test="${orderItem.cargo != null && orderItem.type == 'UNLOADING'}">
                                 Cargo:<ul>
                                 <li>name: ${orderItem.cargo.name}</li>
-                                <li>weight(max = ${sessionScope.maxWeight} kg):${orderItem.cargo.weight}</li>
+                                <li>weight(kg):${orderItem.cargo.weight}</li>
                                 </ul>
                             </c:if>
 

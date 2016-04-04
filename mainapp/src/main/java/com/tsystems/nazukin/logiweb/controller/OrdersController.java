@@ -217,6 +217,7 @@ public class OrdersController {
         //if we edit order
         if (orderEntity.getId() != null) {
             List<DriverEntity> driverOfThisOrderList = driverService.findByOrderId(orderEntity.getId());
+            driverOfThisOrderList.removeIf(o -> o.getWorkTime() + orderEntity.getDuration() > MAX_HOURS);
             driverList.addAll(driverOfThisOrderList);
         }
 
@@ -266,11 +267,12 @@ public class OrdersController {
                                           RedirectAttributes redirectAttributes,
                                           HttpServletRequest request) {
         List<OrderItemEntity> orderItems;
+        List<CargoEntity> cargos;
         switch (action) {
             case "delete":
                 orderItems = (List<OrderItemEntity>) session.getAttribute(LIST_ORDER_ITEMS);
                 OrderEntity order = (OrderEntity) session.getAttribute(ORDER);
-                List<CargoEntity> cargos = new ArrayList<>();
+                cargos = new ArrayList<>();
                 orderItems.removeIf(orderItemEntity -> orderItemEntity.getSequenceNumber() > itemNum);
                 Integer weight = 0;
                 for (OrderItemEntity item : orderItems) {
@@ -291,16 +293,26 @@ public class OrdersController {
             case "update":
                 orderItems = (List<OrderItemEntity>) session.getAttribute(LIST_ORDER_ITEMS);
                 Integer maxWeight = (Integer) session.getAttribute(MAX_WEIGHT);
-                OrderItemEntity item = orderItems.get(itemNum);
-                if (cargo.getWeight() > maxWeight) {
-                    throw new IllegalArgumentException("Cargo weight > max weight!!!");
+                cargos = (List<CargoEntity>) session.getAttribute(CARGO_LIST);
+                CargoEntity itemCargo = orderItems.get(itemNum).getCargo();
+                //if cargo wasn't unloaded
+                if (cargos.contains(itemCargo)) {
+                    maxWeight = maxWeight + itemCargo.getWeight();
+                    if (cargo.getWeight() > maxWeight) {
+                        throw new IllegalArgumentException("Cargo weight > max weight!!!");
+                    }
+                    session.setAttribute(MAX_WEIGHT, maxWeight - cargo.getWeight());
+                }  else {
+                    if (cargo.getWeight() > maxWeight) {
+                        throw new IllegalArgumentException("Cargo weight > max weight!!!");
+                    }
+                    session.setAttribute(MAX_WEIGHT, maxWeight);
                 }
-                session.setAttribute(MAX_WEIGHT, maxWeight - cargo.getWeight() + item.getCargo().getWeight());
-                item.getCargo().setName(cargo.getName());
-                item.getCargo().setWeight(cargo.getWeight());
+                itemCargo.setName(cargo.getName());
+                itemCargo.setWeight(cargo.getWeight());
                 return "redirect:" + request.getHeader("Referer");
             default:
-                return "redirect:" + request.getHeader("Referer");
+                throw new IllegalArgumentException("Wrong action!!!");
         }
     }
 
