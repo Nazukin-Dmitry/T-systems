@@ -10,24 +10,36 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Created by 1 on 14.02.2016.
+ * Service that provides functionality for working with {@link CityEntity}, that representing city's data.
  */
 @Service
 @Transactional
 public class CityService implements CityServiceApi {
 
+    /**
+     * Data access object for city's data.
+     */
     private CityDao cityDao;
 
+    /**
+     * Constructs service.
+     */
     @Autowired
     public CityService(CityDao cityDao) {
         this.cityDao = cityDao;
     }
 
+    /**
+     * @inheriDoc
+     */
     @Override
     public void saveOrUpdate(final CityEntity entity) {
         cityDao.merge(entity);
     }
 
+    /**
+     * @inheriDoc
+     */
     @Override
     public List<CityEntity> getAll() {
         List<CityEntity> result;
@@ -35,6 +47,9 @@ public class CityService implements CityServiceApi {
         return result;
     }
 
+    /**
+     * @inheriDoc
+     */
     @Override
     public CityEntity find(Integer id) {
         CityEntity result;

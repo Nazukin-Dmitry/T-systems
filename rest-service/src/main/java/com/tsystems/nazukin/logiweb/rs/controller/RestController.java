@@ -100,14 +100,6 @@ public class RestController {
     }
 
     @GET
-    @Path("/hello")
-    public DriverEntity hello(){
-        DriverEntity driverEntity = new DriverEntity();
-        driverEntity.setStatus(DriverStatus.ORDER);
-        return driverEntity;
-    }
-
-    @GET
     @Path("/order")
     public Response orderInformation(@QueryParam("serialNumber") Integer serialNumber){
         try {

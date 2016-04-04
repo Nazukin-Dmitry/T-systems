@@ -29,7 +29,7 @@ import java.util.Set;
 public class OrderService implements OrderServiceApi {
 
     /**
-     * data access object for order's data.
+     * Data access object for order's data.
      */
     private OrderDao orderDao;
 
@@ -49,7 +49,7 @@ public class OrderService implements OrderServiceApi {
     private OrderItemDao orderItemDao;
 
     /**
-     * @inheritDoc
+     * Constructs service.
      */
     @Autowired
     public OrderService(OrderDao orderDao, DriverDao driverDao, CargoDao cargoDao, OrderItemDao orderItemDao) {

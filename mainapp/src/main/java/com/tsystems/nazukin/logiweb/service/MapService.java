@@ -15,20 +15,34 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by 1 on 14.02.2016.
+ * Service that provides functionality for working with {@link MapEntity}, that representing map's data.
  */
 @Service
 public class MapService implements MapServiceApi {
 
+    /**
+     * Data access object for map data.
+     */
     private MapDao mapDao;
+
+    /**
+     * Data access object for city's data.
+     */
     private CityDao cityDao;
 
+
+    /**
+    * Constructs service.
+     */
     @Autowired
     public MapService(MapDao mapDao, CityDao cityDao) {
         this.mapDao = mapDao;
         this.cityDao = cityDao;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     @Transactional
     public void saveOrUpdate(Integer id1, Integer id2, Integer interval) {
@@ -49,6 +63,9 @@ public class MapService implements MapServiceApi {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     @Transactional
     public void delete(Integer id) {
@@ -56,6 +73,9 @@ public class MapService implements MapServiceApi {
         mapDao.delete(entity);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     @Transactional
     public Map<CityEntity, MapEntity> getCityIntervals(Integer cityId) {
@@ -78,6 +98,9 @@ public class MapService implements MapServiceApi {
         return result;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     @Transactional
     public Integer getInterval(Integer cityId1, Integer cityId2) {
@@ -93,6 +116,9 @@ public class MapService implements MapServiceApi {
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     @Transactional
     public CityEntity save(Integer idCityFrom, String nameCityTo, Integer interval) {
@@ -109,6 +135,9 @@ public class MapService implements MapServiceApi {
         return cityTo;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public Integer duration(List<OrderItemEntity> orderItems) {
         Integer duration = 0;
