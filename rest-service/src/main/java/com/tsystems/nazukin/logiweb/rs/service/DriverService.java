@@ -165,25 +165,23 @@ public class DriverService implements DriverServiceApi {
         Calendar calendarEnd = Calendar.getInstance();
         calendarEnd.setTimeInMillis(startTime.getTime() + TimeUnit.HOURS.toMillis(duration));
 
-        //if startTime of order is not in next month
-        if (Calendar.getInstance().get(Calendar.MONTH) == calendarStart.get(Calendar.MONTH)) {
-            //if end of order in the next month
-            long diffHours = duration;
-            if (calendarStart.get(Calendar.MONTH) != calendarEnd.get(Calendar.MONTH)) {
-                //set time to start of neext month
-                calendarStart.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMinimum(Calendar.DAY_OF_MONTH));
-                calendarStart.set(Calendar.HOUR_OF_DAY, calendarEnd.getActualMinimum(Calendar.HOUR_OF_DAY));
-                calendarStart.set(Calendar.MINUTE, calendarEnd.getActualMinimum(Calendar.MINUTE));
-                calendarStart.set(Calendar.SECOND, calendarEnd.getActualMinimum(Calendar.SECOND));
+        //if end of order in the other month
+        long diffHours = duration;
+        if (calendarStart.get(Calendar.MONTH) != calendarEnd.get(Calendar.MONTH)) {
+            //set time to start of next month
+            Calendar newStart = Calendar.getInstance();
+            newStart.setTime(calendarEnd.getTime());
+            newStart.set(Calendar.DAY_OF_MONTH, calendarEnd.getActualMinimum(Calendar.DAY_OF_MONTH));
+            newStart.set(Calendar.HOUR_OF_DAY, calendarEnd.getActualMinimum(Calendar.HOUR_OF_DAY));
+            newStart.set(Calendar.MINUTE, calendarEnd.getActualMinimum(Calendar.MINUTE));
+            newStart.set(Calendar.SECOND, calendarEnd.getActualMinimum(Calendar.SECOND));
 
-                long diff = calendarEnd.getTimeInMillis() - calendarStart.getTimeInMillis();
-                diffHours = TimeUnit.MILLISECONDS.toHours(diff);
-                return (int) diffHours;
-            } else {
-                return ((int) diffHours + workTime);
-            }
+            long diff = calendarEnd.getTimeInMillis() - newStart.getTimeInMillis();
+            diffHours = TimeUnit.MILLISECONDS.toHours(diff);
+            return (int) diffHours;
         } else {
-            return duration + workTime;
+            return ((int) diffHours + workTime);
         }
+
     }
 }

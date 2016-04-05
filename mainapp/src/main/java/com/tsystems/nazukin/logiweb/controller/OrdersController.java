@@ -217,6 +217,11 @@ public class OrdersController {
         //if we edit order
         if (orderEntity.getId() != null) {
             List<DriverEntity> driverOfThisOrderList = driverService.findByOrderId(orderEntity.getId());
+            for (DriverEntity driver : driverOfThisOrderList){
+                if (driver.getWorkTime() + orderEntity.getDuration() > MAX_HOURS){
+                    driver.setCurrentOrder(null);
+                }
+            }
             driverOfThisOrderList.removeIf(o -> o.getWorkTime() + orderEntity.getDuration() > MAX_HOURS);
             driverList.addAll(driverOfThisOrderList);
         }
